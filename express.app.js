@@ -77,7 +77,7 @@ app.get('/20less', function (req, res) {
             console.log(Object.keys( subs));
 
             subs.toArray(function (err, docs){
-                res.json({j:j, subs:docs});
+                res.json({'top':j, subs:docs});
             });
 
             //res.json({j:j, subs:subs});
