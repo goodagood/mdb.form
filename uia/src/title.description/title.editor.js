@@ -1,10 +1,16 @@
 
 import React from 'react';
 
-//import './value.css'
 import {TextareaOrText} from './text.area.js';
 
-class SwitchInput extends React.Component {
+class TitleEditor extends React.Component {
+
+    /*
+     * onChange
+     * onBlur
+     * onSubmit  // no need when there is no submit button
+     */
+
     constructor(props) {
         super(props);
 
@@ -145,7 +151,7 @@ class SwitchInput extends React.Component {
 //    render = ()=>{
 //        return (
 //            <label> {this.d.lable}: 
-//                <SwitchInput obj={this.props.obj} />
+//                <TitleEditor obj={this.props.obj} />
 //            </label>
 //        );
 //    }
@@ -198,7 +204,7 @@ class FirstPairOfTitleDescription extends React.Component {
     render(){
         return (
                 <div className="firstpair">
-                    <SwitchInput obj={this.props.obj}
+                    <TitleEditor obj={this.props.obj}
                         onChange={this.onTitleChange}
                     />
                     
@@ -211,4 +217,4 @@ class FirstPairOfTitleDescription extends React.Component {
 }
 
 
-export {SwitchInput, FirstPairOfTitleDescription};
+export {TitleEditor, FirstPairOfTitleDescription};
