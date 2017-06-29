@@ -58,29 +58,35 @@ app.get('/20less', function (req, res) {
     vrec.findOneTop(null, function(err, rec){
         var j = {};
         if(err){
-            j.err = err;
+            //j.err = err;
+            return res.json({err: err});
         }else{
             j = rec;
+            j['id'] = j['_id'].toString();
         }
         console.log(j);
 
-        var pid = j['_id'].toString();
+        var pid = j['id'];
         console.log('pid: ', pid);
         var opt = {
             limit: 10,
         };
 
         vrec.findSubsOpt(pid, opt, function(err, subs){
-            if (err) return res.end(err.toString());
+            if (err) return res.json({err: err.toString(), msg:'err when vrec find subs opt'});
 
             console.log(typeof subs);
             console.log(Object.keys( subs));
 
             subs.toArray(function (err, docs){
-                res.json({'top':j, subs:docs});
+                if(err) return res.json({'err' : err, 'msg' : 'toArray err, 2017 0627 1956pm'});
+                docs.map((d)=>{
+                    d['id']=d['_id'].toString();
+                    return d;
+                });
+                res.json({'top' : j, subs : docs});
             });
 
-            //res.json({j:j, subs:subs});
         });
 
     });

@@ -4,6 +4,10 @@ import './App.css';
 
 import ListEditor from './title.description/list.editor.js';
 
+import {TitleDescription} from './title.description/td.js';
+
+const p = console.log;
+
 
 class App extends Component {
 
@@ -13,6 +17,10 @@ class App extends Component {
         this.state = {};
 
         this.jsonurl = "/20less";
+
+        this.data = null;
+        //this.top  = null;
+        //this.subs = null;
 
         setTimeout(this.fetchData, 10);
     }
@@ -45,6 +53,20 @@ class App extends Component {
     }
 
 
+    testTitleDescription(){
+        p('test title description ', this.data.top);
+
+        //let data={
+        //    text: 'in test input text',
+        //};
+        let opt={
+            showForm: false,
+        };
+        return (
+                <TitleDescription data={this.data.top} opt={opt} />
+               );
+    }
+
     renderNormal() {
         return (
                 <div className="App">
@@ -52,7 +74,12 @@ class App extends Component {
                 0625, To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
 
+                <div className="test0627">
+                    {this.testTitleDescription()}
+                </div>
+
                 <div className="my0625">
+                    <p> place holder for list editor </p>
                     <ListEditor data={this.data} />
                 </div>
                 </div>

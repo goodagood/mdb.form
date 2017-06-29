@@ -13,6 +13,7 @@ class ListEditor extends Component {
 
     constructor(props) {
         super(props);
+
     }
 
     showSubmit(e, value){
