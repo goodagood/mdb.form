@@ -2,94 +2,108 @@ import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
 
-import ListEditor from './title.description/list.editor.js';
+//import ListEditor from './title.description/list.editor.js';
 
-import {TitleDescription} from './title.description/td.js';
+import ContentArea from './title.description/content.area.js';
+
+import {TitleDescription} from './title.description/td.js'; //d
+import Sublist from './title.description/sub.list.js';
+import TopListor from './title.description/top.list.js';
+//import TestOneRec from './title.description/one.rec.js';
+import TopAndSub from './title.description/top.and.sub.js';
+import {AddTitleDescription} from './title.description/add.td.js';
+
+//import {ButMenu} from './menu.button/but.js';
+import {ExampleMenu} from './menu.button/burger.js';
+
+import {translate} from 'react-i18next';
 
 const p = console.log;
 
 
 class App extends Component {
 
+
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            //showWhat: 'listTopRec',
+            //oneid: 'the id of the top record to be shown up'
+        };
 
-        this.jsonurl = "/20less";
+        this.contentStateControl = null;
 
-        this.data = null;
+        //this.jsonurl = "/20less";
+
+        //this.data = null;
         //this.top  = null;
         //this.subs = null;
 
-        setTimeout(this.fetchData, 10);
+        //setTimeout(this.fetchData, 10);
     }
 
-    fetchData = ()=>{
-        //console.log(this.jsonurl);
-        this.data = null;
-        fetch(this.jsonurl).then((response) =>{
-            return response.json();
-        }).then((j)=>{
-            //console.log('json? ', j);
-            this.data = j;
-            this.setState({'fetched': true});
-
-            console.log(j);
-
-        });
+    //doing
+    passBackStateSetter = (function2setState)=>{
+        this.contentStateControl = function2setState;
     }
 
+    addNewRecEventHandler = (e)=>{
+        e.preventDefault();
+        console.log('called .. 1008am ');
+        
+        if(this.contentStateControl == null){
+            return console.log('no contentStateControl, it is null');
+        }
 
-    renderDoingFetching(){
-        return (
-                <div className="App">
-                <p className="App-intro">
-                     doing data fetching
-                </p>
-                </div>
-               );
-
-    }
-
-
-    testTitleDescription(){
-        p('test title description ', this.data.top);
-
-        //let data={
-        //    text: 'in test input text',
-        //};
-        let opt={
-            showForm: false,
-        };
-        return (
-                <TitleDescription data={this.data.top} opt={opt} />
-               );
-    }
-
-    renderNormal() {
-        return (
-                <div className="App">
-                <p className="App-intro">
-                0625, To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
-
-                <div className="test0627">
-                    {this.testTitleDescription()}
-                </div>
-
-                <div className="my0625">
-                    <p> place holder for list editor </p>
-                    <ListEditor data={this.data} />
-                </div>
-                </div>
-               );
+        this.contentStateControl({showWhat:'AddNew'});
     }
 
     render(){
-        if(this.state.fetched) return this.renderNormal();
-        else return this.renderDoingFetching();
+        const {t} = this.props;
+
+        return (
+
+            <div className="App" id="appdiv">
+                <ExampleMenu right pageWrapId={ "page-wrap" } outerContainerId={ "appdiv" } />
+
+                <main id="page-wrap">
+                    <form className="chooser">
+
+                        <button type="button" 
+                            onClick={(e)=>{this.setState({showWhat:'ListTopRec'})}}>
+                            List Value Records
+                        </button>
+
+                        <button type="button"
+                            onClick={this.addNewRecEventHandler}>
+                        >
+                        Add Value Record </button>
+
+                    </form>
+                    {/*
+                    <button type="button"
+                        onClick={(e)=>{this.setState({showWhat:'TestOneRec'})}}>
+                    >
+                    show One top Value </button>
+
+                    Change to another component
+
+                    {this.switchRender()}
+
+                    do translation test
+                    <p> test i18n: {t('helloo')} </p>
+                    */}
+
+                    
+                    <ContentArea passBackStateSetter={this.passBackStateSetter} />
+
+
+                </main>
+            </div>
+        );
     }
 }
 
-export default App;
+//export default App;
+export default translate()(App);

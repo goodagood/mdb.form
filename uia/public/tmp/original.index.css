@@ -4,11 +4,9 @@ body {
   font-family: sans-serif;
   text-align: center; }
   body nav.top {
-    top: 0;
+    background-color: #b3c495;
     position: fixed;
-    display: block;
     margin: 0;
-    padding: 0;
     width: 100%;
     height: 1.5em;
     text-align: left; }
@@ -16,10 +14,11 @@ body {
       margin: 0;
       padding: 0;
       float: left;
-      display: block;
+      display: inline-block;
       text-align: center;
       width: 5em; }
   body div#root {
-    margin-top: 1.5em; }
+    margin-top: 1.5em;
+    padding-top: 1.5em; }
 
-/*# sourceMappingURL=index.css.map */
+/*# sourceMappingURL=original.index.css.map */

@@ -1,0 +1,26 @@
+html
+  head
+      title= title
+  body
+      h1= message
+
+      div
+        form(method='POST' action='/insertone')
+
+              div.form-group
+                label(for='name') Name:
+                input#name.form-control(
+                    type='text', 
+                    defaultValue='name input first and last'
+                    name='name')
+              div.form-group
+                label(for='email') Email:
+                input#text.form-control(type='text',
+                    value='name@email.com'
+                    name='email')
+              div.form-group
+                label(for='favoriteBook') Favorite Book:
+                input#favoriteBook.form-control(type='text',
+                    defaultValue='title of book'
+                    name='favoriteBook')
+              button.btn.btn-primary(type='submit') Sign up

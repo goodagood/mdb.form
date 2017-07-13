@@ -1,0 +1,23 @@
+
+form.titledescription {
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+    label {
+        width: 14%;
+    }
+
+    input[type=text] {
+        width: 84%;
+        font-size: 1.1em;
+    }
+
+    h3 {
+        font-size: 1em;
+    }
+
+    textarea {
+        width: 99%;
+        font-size: 1.2em;
+    }
+}

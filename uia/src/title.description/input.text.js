@@ -23,8 +23,8 @@ class InputText extends React.Component {
         // props.opt.showForm
 
         this.textKey     = props.opt.textKey  || "text" ;
+        let defaultValue = props.data[this.textKey]|| "input 0627" ; //d
         let showForm     = props.opt.showForm || false ;
-        let defaultValue = props.data[this.textKey]|| "input 0627" ;
 
         this.state = {
             "showForm" : showForm,
@@ -37,15 +37,21 @@ class InputText extends React.Component {
 
     }
 
+    getText = ()=>{
+        return this.props.data[this.textKey];
+    }
 
-    handleBlur (e) {
-        //var text = e.target.value;
+    setText = (text)=>{
+        return this.props.data[this.textKey] = text;
+    }
+
+
+    handleBlur = (e) => {
 
         // showForm : false  > make input form switch off
         // setState will refresh the render
         this.setState({
             "showForm": false,
-            //"text":text
         });
 
         //console.log('handle focus out, the state? changed to tmp? ', text, this.d.text);
@@ -60,10 +66,12 @@ class InputText extends React.Component {
     }
 
 
-    textChange (e) {
+    textChange = (e) => {
         var value = e.target.value;
-        this.props.data[this.textKey] = value; // actually mutable data
+
+        //this.props.data[this.textKey] = value; // actually mutable data
         //console.log('textChange 1203: ', this.props.data[this.textKey]);
+        this.setText(value);
 
         if(this.props.onChange){
             this.props.onChange(e);
@@ -83,7 +91,7 @@ class InputText extends React.Component {
     }
 
 
-    clickText (e){
+    clickText = (e) => {
         this.setState({showForm:true});
 
         /*
@@ -105,7 +113,7 @@ class InputText extends React.Component {
 
         return (
             <span  onClick={this.clickText} >
-                    {this.props.data.text}
+                    {this.getText()}
             </span>
         );
     }

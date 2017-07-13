@@ -18,7 +18,11 @@
   },
   "homepage": "https://github.com/goodagood/mdb.form#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "bulma": "^0.4.2",
     "express": "^4.15.3",
-    "mongodb": "^2.2.29"
+    "jquery": "^3.2.1",
+    "mongodb": "^2.2.29",
+    "pug": "^2.0.0-rc.2"
   }
 }

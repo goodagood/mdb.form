@@ -1,10 +1,25 @@
 
 
 const express = require('express');
+const bodyparser = require('body-parser');
+
+const p = console.log;
+
+
 const app = express();
 
+// parse application/x-www-form-urlencoded
+//app.use(bodyparser.urlencoded({ extended: false }));   //?
+
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
+
 app.use('/b', express.static('build'))
-app.use(express.static('public'))
+app.use(express.static('pub'))
+
+app.set('views', './views');
+app.set('view engine', 'pug');
+
 
 //app.get('/', function (req, res) {
 //  res.send('Hello World!')
@@ -37,7 +52,7 @@ app.get('/hello', function (req, res) {
 const vrec = require("./mdb/vrec.js");
 app.get('/gettop', function (req, res) {
     //res.end('Hello World!')
-    vrec.findOneTop(null, function(err, rec){
+    vrec.findOneTop(function(err, rec){
         var j = {};
         if(err){
             j.err = err;
@@ -53,9 +68,54 @@ app.get('/gettop', function (req, res) {
 
 ////app.get('/getbyid/:id', function (req, res) {
 app.get('/20less', function (req, res) {
-    //res.end('Hello World!')
+    //console.log('in get 20 less');
     
-    vrec.findOneTop(null, function(err, rec){
+    vrec.findOneTop(function(err, rec){
+        //p(rec, err);
+        var j = {};
+        if(err){
+            //j.err = err;
+            return res.json({err: err});
+        }else{
+            j = rec;
+            j['id'] = j['_id'].toString();
+        }
+        //console.log(j);
+
+        var pid = j['id'];
+        console.log('pid: ', pid);
+        var opt = {
+            limit: 10,
+        };
+
+        vrec.findSubsOpt(pid, opt, function(err, subs){
+            if (err) return res.json({err: err.toString(), msg:'err when vrec find subs opt'});
+
+            //console.log(typeof subs);
+            //console.log(Object.keys( subs));
+
+            subs.toArray(function (err, docs){
+                if(err) return res.json({'err' : err, 'msg' : 'toArray err, 2017 0627 1956pm'});
+                docs.map((d)=>{
+                    d['id']=d['_id'].toString();
+                    return d;
+                });
+                res.json({'top' : j, subs : docs});
+            });
+
+        });
+
+    });
+    //res.end('Hello World, port 4038!')
+});
+
+app.get('/id/:id', function (req, res) {
+    //console.log('in get 20 less');
+    
+    let idstr = req.params['id'];
+    console.log(idstr);
+    vrec.findOneByIDStr(idstr, function(err, rec){
+        //p(rec, err);
         var j = {};
         if(err){
             //j.err = err;
@@ -94,6 +154,45 @@ app.get('/20less', function (req, res) {
 });
 
 
+
+
+app.get('/top20', function (req, res) {
+    //res.end('Hello World!')
+    
+    vrec.findTops(20, function(err, topArray){
+        if(err) return res.json({err: err});
+
+
+        let a = topArray.map(rec =>{
+            rec['id'] = rec['_id'].toString();
+            return rec;
+        });
+        res.json(a);
+    });
+});
+
+
+app.get('/testinsertone', function(req,res){
+    //res.end('<h1> ooo </h1');
+    res.render('testinsertone', {
+        title: 'test insert one',
+        message: 'can we post data to the url /insertone?'
+    });
+});
+
+app.post('/insertone', function (req, res) {
+    console.log('req.body :');
+    console.log(req.body);
+    vrec.insertTop(req.body, function(err, insert){
+        if(err) return res.json({err: err});
+
+        console.log(insert.insertedId);
+        res.json({ok: true});
+    });
+
+        //res.json({ok: true, test:Date.now().toString()});
+    
+});
 
 app.listen(4038, function () {
   console.log('Example app listening on port 4038!')

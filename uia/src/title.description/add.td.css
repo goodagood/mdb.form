@@ -1,0 +1,15 @@
+form.titledescription {
+  margin-top: 1em;
+  margin-bottom: 1em; }
+  form.titledescription label {
+    width: 14%; }
+  form.titledescription input[type=text] {
+    width: 84%;
+    font-size: 1.1em; }
+  form.titledescription h3 {
+    font-size: 1em; }
+  form.titledescription textarea {
+    width: 99%;
+    font-size: 1.2em; }
+
+/*# sourceMappingURL=add.td.css.map */

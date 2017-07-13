@@ -1,0 +1,12 @@
+
+textarea {
+    width: 85%;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 1em;
+    /*
+    text-decoration: underline;
+    */
+}

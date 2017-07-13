@@ -3,6 +3,9 @@ import React from 'react';
 
 //import {TextareaOrText} from './text.area.js';
 import {InputText} from './input.text.js';
+import {TextareaSwitch} from './text.area.js';
+
+import './td.css';
 
 
 const d13 = /^\s*\d{13}\s*$/;
@@ -54,17 +57,20 @@ class TitleDescription extends React.Component {
         let showForm     = props.opt.showForm || false ;
         let defaultTitle = props.data.title   || "title 0627" ;
         let defaultDescription = props.data.description || "description 0627" ;
-        let titleLabel = props.data.titleLabel  || "Title" ;
+        let titleLabel = props.opt.titleLabel  || "Title" ;
         let titleHint = props.data.titleHint  || "" ;
 
         let descriptionHint = props.data.descriptionHint  || "*" ;
-        let descriptionLabel = props.data.descriptionLabel  || "Description" ;
+        let descriptionLabel = props.opt.descriptionLabel  || "Description" ;
 
         this.state = {
             "showForm" : showForm,
             "defaultTitle": defaultTitle,
             "defaultDescription": defaultDescription,
             "titleLabel": titleLabel,
+
+            "descriptionLabel": descriptionLabel,
+
         };
 
         this.handleBlur = this.handleBlur.bind(this);
@@ -85,12 +91,6 @@ class TitleDescription extends React.Component {
         //return ; //?
     }
 
-
-    render(){
-        if(this.state.showForm) return this.renderForm();
-        //else:
-        return this.renderText();
-    }
 
 
     textChange (e) {
@@ -125,22 +125,34 @@ class TitleDescription extends React.Component {
                );
     }
 
-    renderForm(){
+    testTextareaSwitch(){
+        let data = this.props.data;
+        let opt ={
+            textKey: 'description',
+            //showForm: true,
+        };
+
+        return (
+                <TextareaSwitch data={data} opt={opt} />
+               );
+    }
+
+
+    render(){
         return (
             <form className="titledescription" key={this.props.data.id} >
-                <label>{this.state.titleLabel} </label>
-                {this.testInputText()}
+                <div>
+                    <label>{this.state.titleLabel} : </label>
+                    {this.testInputText()}
+                </div>
 
+                <div>
+                    <h3>{this.state.descriptionLabel} : </h3>
+                    {this.testTextareaSwitch()}
+                </div>
                 {/*
-                        <input 
-                            className="switchInput"
-                            type="text" 
+                    {this.testTextarea()}
 
-                            defaultValue={this.props.data.title}
-
-                            onChange={this.textChange}
-                            onBlur={this.handleBlur}
-                        />
                 */}
             </form>
 

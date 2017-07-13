@@ -3,36 +3,32 @@ import React from 'react';
 
 //import './value.css'
 
-class TextareaOrText extends React.Component {
+class TextareaSwitch extends React.Component {
+
     constructor(props) {
         super(props);
 
-        const showForm = false || props.obj.showForm;
-        //const defaultDescription = props.obj.description || "default description for t-a- input 0607" ;
+        var showForm = false || props.opt.showForm;
+
+        //text : props.data[props.opt.textKey]
+        this.textKey = props.opt.textKey || 'text';
 
         this.state = {
             "showForm" : showForm,
             //"text": 'should we make a component for textarea or?',
         };
 
-        // make it a reference, for old things
-        this.tmp = props.obj;
 
-        // d?
-        this.tmp = {
-            "text": null, // tmp storage for content, avoid state refreshing
-
-            "start": Date.now(), //milli seconds
-            "edit": null, //milli seconds
-            "save": null, //milli seconds
-
-        };
-
+        this.changeText = this.changeText.bind(this);
+        this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
     }
 
-    textChange = (e) => {
+
+    handleTextChange = (e) => {
         var value = e.target.value;
-        this.props.obj.description = value;
+        //this.props.data.description = value; //c
+        this.changeText(value);
 
         if(this.props.noticeDataChange){
             this.props.noticeDataChange();
@@ -42,7 +38,7 @@ class TextareaOrText extends React.Component {
         //this.tmp.edit = milli;
     }
 
-    handleFocusOut = (e) => {
+    handleBlur = (e) => {
         var text = e.target.value;
         //console.log('save the changed to tmp ', text);
 
@@ -59,36 +55,42 @@ class TextareaOrText extends React.Component {
         // save the data
     }
 
-    getDefaultText = ()=>{
+    getDefaultValue = ()=>{
         var text = 'warning---input for description textarea  in render form ---';
 
-        if(this.props.obj.description){
-            text = this.props.obj.description;
+        if(this.props.opt.textKey && this.props.data[this.props.opt.textKey]){
+            return this.props.data[this.props.opt.textKey];
         }
+
 
         return text;
     }
 
+
+    /*
+     * This not handle event, but set the new text
+     */
+    changeText (text){
+        this.props.data[this.props.opt.textKey] = text;
+    }
+
+
     renderForm(){
 
-        var text = this.getDefaultText();
+        var text = this.getDefaultValue();
 
 
         return (
-            <div className="row center">
+                <textarea 
+                    className="sizeisquestion"
+                    type="textarea" 
 
-            <form className="descriptionform" >
-                    <textarea 
-                        className="sizeisquestion"
-                        type="textarea" 
+                    defaultValue={text}
 
-                        defaultValue={text}
-                        onChange={this.textChange}
-                        onBlur={this.handleFocusOut}
-                    />
-            </form>
+                    onChange={this.handleTextChange}
+                    onBlur={this.handleBlur}
+                />
 
-            </div>
             );
     }
 
@@ -99,25 +101,24 @@ class TextareaOrText extends React.Component {
         this.setState({showForm:true});
     }
 
+
     renderText(){
 
-        var text = this.getDefaultText();
+        var text = this.getDefaultValue();
 
         return (
-            <div className="description">
-
-                    <span  onClick={this.clickText} >
-                        {text}
-                    </span>
+            <div  onClick={this.clickText} >
+                {text}
             </div>
         );
     }
 
+
     render(){
-        if(this.state.showForm) return this.renderForm();
-        return this.renderText();
+        if(this.state.showForm){ return this.renderForm(); }
+        else{ return this.renderText(); }
     }
 }
 
 
-export {TextareaOrText};
+export {TextareaSwitch};

@@ -1,0 +1,36 @@
+
+$height_top_nav : 1.5em;
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+
+    text-align: center;
+
+    nav.top {
+        background-color:#b3c495;
+        position: fixed;
+        margin: 0;
+        width: 100%;
+        height: $height_top_nav;
+        text-align:left;
+
+
+        a {
+            margin:0;
+            padding:0;
+            float:left;
+            display:inline-block;
+            text-align:center;
+            width: 5em;
+        }
+    }
+
+    div#root {
+        margin-top: $height_top_nav;
+        padding-top: $height_top_nav;
+    }
+
+}
+
