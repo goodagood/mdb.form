@@ -1,0 +1,30 @@
+
+form > div {
+    margin-left: 1em;
+}
+form > div.title {
+    margin-left: 0;
+    margin-bottom: 1em;
+}
+
+form {
+    margin: 2em auto 2em;
+
+    label.standout {
+        display: block;
+
+        margin-left: none;
+    }
+
+    input.title, textarea {
+        width: 95%;
+        max-width: 78em;
+
+    }
+
+    input[type=submit] {
+        margin-left: 1em;
+    }
+
+}
+

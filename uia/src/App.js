@@ -11,7 +11,9 @@ import Sublist from './title.description/sub.list.js';
 import TopListor from './title.description/top.list.js';
 //import TestOneRec from './title.description/one.rec.js';
 import TopAndSub from './title.description/top.and.sub.js';
-import {AddTitleDescription} from './title.description/add.td.js';
+
+//import {AddTitleDescription} from './title.description/add.td.js';
+import BasicText from './title.description/basic.text.js';
 
 //import {ButMenu} from './menu.button/but.js';
 import {ExampleMenu} from './menu.button/burger.js';
@@ -62,13 +64,17 @@ class App extends Component {
     render(){
         const {t} = this.props;
 
+        var chooserStyle = {
+            "marginBottom": "1.5em",
+        };
+
         return (
 
             <div className="App" id="appdiv">
                 <ExampleMenu right pageWrapId={ "page-wrap" } outerContainerId={ "appdiv" } />
 
                 <main id="page-wrap">
-                    <form className="chooser">
+                    <form className="chooser" style={chooserStyle}>
 
                         <button type="button" 
                             onClick={(e)=>{this.setState({showWhat:'ListTopRec'})}}>
@@ -81,6 +87,10 @@ class App extends Component {
                         Add Value Record </button>
 
                     </form>
+
+                    <div className="test">
+                        <BasicText />
+                    </div>
                     {/*
                     <button type="button"
                         onClick={(e)=>{this.setState({showWhat:'TestOneRec'})}}>

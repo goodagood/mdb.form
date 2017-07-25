@@ -1,0 +1,22 @@
+
+$HeaderHeight: 2em;
+$FootHeight: 2em;
+$MaxBodyWidth: 1024px;
+
+html {
+    text-align: center;
+
+
+    body {
+        max-width: $MaxBodyWidth;
+        margin: auto;
+        text-align: left;
+        background-color: silver; 
+        //border-style: solid;
+        //border-width: 2px;
+    }
+
+    input textarea {
+        max-width: 78em;
+    }
+}

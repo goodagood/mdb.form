@@ -14,8 +14,13 @@ const app = express();
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
-app.use('/b', express.static('build'))
+
 app.use(express.static('pub'))
+app.use('/b', express.static('build'))
+
+// 2017 0715, test another attempt of UI settings
+app.use('/ui715', express.static('ui715/pub'))
+
 
 app.set('views', './views');
 app.set('view engine', 'pug');

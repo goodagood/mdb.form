@@ -110,9 +110,11 @@ class AddTitleDescription extends Component {
                     </textarea>
                 </div>
 
-                <div>
-                    <input type="submit" 
-                    value="Submit" />
+                <div className="valueSubmit">
+                    <label className="valueLabel"> Value:
+                        <input type="number" value="0" />
+                    </label>
+                    <input type="submit" value="Submit" />
                 </div>
             </form>
         );

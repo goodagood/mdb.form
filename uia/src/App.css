@@ -5,6 +5,10 @@
     max-width: 50em; /* d */
 }
 
+.App .test {
+    margin: 2em;
+}
+
 
 
 /*  */
