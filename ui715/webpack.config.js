@@ -61,7 +61,21 @@ var config = {
             	{
 					loader: "sass-loader" // compiles Sass to CSS
 				}]
-			}
+			},
+
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)(\?[a-z0-9]+)?$/,
+                //loader: 'file?name=public/fonts/[name].[ext]'
+                loader: 'file-loader',
+                options:{
+                    name: '[name].[ext]',
+                    outputPath: 'fonts/',
+                    publicPath: '../'
+                }
+            }
+
+
+
         ]
     }
 

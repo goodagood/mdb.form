@@ -3,12 +3,15 @@ var vrec = require('./vrec.js');
 
 var p = console.log;
 
+var o = {}; // to hold objects for inspecting.
 
-function cInsertOne(){
-    var o = {
-        title: '0702 1546pm test c insert one',
-        description: `finding the way
-            the result give id, see it's objectId or string
+
+function c_insert_top(){
+    var data = {
+        title: 'update write op result 0728 1722pm',
+        description: `mongodb node.js callback get it
+            write op result
+            ops, connection, result
             do the insert,
             and check the results
             `,
@@ -16,9 +19,12 @@ function cInsertOne(){
         milli: Date.now(),
     };
 
-    o.value = (o.title + o.description).length;
+    data.value = (data.title + data.description).length;
 
-    vrec.insertTop(o, function(err, what){
+    vrec.insertOneTd(data, function(err, what){
+        if(err) return p(err);
+
+        o.what = what;
         //p(what);
         p(what.result);
         p(what.insertedId);
@@ -27,6 +33,9 @@ function cInsertOne(){
         p(err);
     });
 }
+
+c_insert_top();
+
 
 function cInsertSub(){
     var o = {
@@ -49,7 +58,7 @@ function cInsertSub(){
         o.parentid = top['_id'];
         p(o.parentid);
 
-        vrec.insertTop(o, function(err, what){
+        vrec.insertOneTd(o, function(err, what){
             //p(what);
             p(what.result);
             p(what.insertedId);
@@ -66,14 +75,42 @@ function cInsertSub(){
 }
 
 
+function c_find_update_top(){
+    vrec.findOneTop(function(err, top){
+        if(err) return p(err);
+
+        o.top = top;
+        top.editmilli = Date.now();
+
+        vrec.updateTD(top, function(err, data, status){
+            if(err) return p(err);
+
+            o.rdata = data;
+            o.status = status;
+            p('can y get this?');
+        });
+
+    });
+}
+
+//c_find_update_top();
+
+
+
+
+//if(! vrec.updateTD){
+//    p(`fuck, you get no vrec.updateTD`);
+//}
+
+
 
 
 if(require.main === module){
 
-    //cInsertOne();
-    cInsertSub();
+    //c_insert_top();
+    //cInsertSub();
 
-    setTimeout(()=>{
-        process.exit();
-    }, 3000);
+    //setTimeout(()=>{
+    //    process.exit();
+    //}, 3000);
 }

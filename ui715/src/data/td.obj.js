@@ -1,14 +1,20 @@
 
+import {postTitleDescription} from 'src/util/pipe.js';
+
 const p = console.log;
 
-function prepareTitleDescriptionObj(){
+
+function getTitleDescriptionObj(){
     let d = {}; //data
     let o = {}; //obj using the data
+
+    // use src/util/pipe.js, we don't need url anymore
     let url = null; // the url accept json from fetch api
+
     let timer = {
-        'id': null,
+        'id-timeout': null,
         'milli': -1, // 'the milli-seconds set by setTimeout
-        'delay': 5000, // 5s
+        'delay': 5000, // 5 seconds
     }
 
     o.getData = ()=>{ return d; };
@@ -23,23 +29,12 @@ function prepareTitleDescriptionObj(){
     const setChangeMill = ()=>{ d['milliChange'] = Date.now(); };
     const setSaveMill = ()=>{ d['milliSave'] = Date.now(); };
 
-    o.setTitle = (title)=>{
-        d['title'] = title;
-        setChangeMill();
-        //d['milliChange'] = Date.now().toString();
-    };
-
-    o.setDescription = (description)=>{
-        d['description'] = description;
-        setChangeMill();
-        //d['milliChange'] = Date.now().toString();
-    };
 
     o.setUrl = (u)=>{ url = u; };
     o.getUrl = ()=>{ return url; };
 
-    o.getValue = (key)=>{ return d[key]; };
-    o.setValue = (key, value)=>{ d[key] = value; setChangeMill(); };
+    o.getKey = (key)=>{ return d[key]; };
+    o.setKey = (key, value)=>{ d[key] = value; setChangeMill(); };
 
     o.assign = (obj)=>{ Object.assign(d, obj); setChangeMill(); };
 
@@ -54,42 +49,27 @@ function prepareTitleDescriptionObj(){
     }
 
 
-    // with callback
-    o._save = (callback)=>{
-        fetch(url, {
-            method: 'post',
-            body: JSON.stringify(d),
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            }),
-            redirect: 'follow',
-        }).then((resp)=>{
-            p('then: ', resp);
-            p();
-            p('resp obj keys: ', Object.keys(resp));
-
-            p(resp.ok);
-
-            p();
-            return resp.json();
-            //return callback(null, resp);
-        }).then((j)=>{
-            p('can we get json from promise? ', j);
-            p('can we throw err any way ? ', j);
-            return Promise.reject('reject it from Promise.reject and return');
-            //throw('this is stone head');
-        }).catch(function(err){
-            p('catch ', err);
-
-            //return callback(err);
+    // return the promise
+    o._save = ()=>{
+        return postTitleDescription(d).then(function(jdata){
+            if(!d['id']){
+                console.log('got id: ', jdata['id'] || jdata['_id']);
+                if(jdata['id'])  d['id']  = jdata['id'];
+                if(jdata['_id']){
+                    d['_id'] = jdata['_id'];
+                    d['id'] = jdata['_id'].toString();
+                }
+            }
+            setSaveMill();
+            return jdata; // json data
         });
-    };
+    }
+
 
     /*
      * timer : {
      *      milli-seconds: ,
-     *      id: set by setTimeout
+     *      id-timeout: set by setTimeout
      * }
      */
     o.saveLater = ()=>{
@@ -97,26 +77,52 @@ function prepareTitleDescriptionObj(){
 
         if(timer && timer['milli']){
             if( milli < timer['milli']){
-                clearTimeout(timer['id']);
+                clearTimeout(timer['id-timeout']);
             }
         }
 
-        timer['id'] = setTimeout(o._save, timer['delay']);
+        timer['id-timeout'] = setTimeout(o._save, timer['delay']);
         timer['milli'] = milli + timer['delay'];
     };
 
+
+    o.getTitle = ()=>{
+        return d['title'];
+    }
+
+    o.setTitle = (title)=>{
+        d['title'] = title;
+        setChangeMill();
+        o.saveLater();
+    };
+
+    o.getDescription = ()=>{
+        return d['description'];
+    }
+
+    o.setDescription = (description)=>{
+        d['description'] = description;
+        setChangeMill();
+        o.saveLater();
+    };
 
     return o;
 }
 
 
-export {prepareTitleDescriptionObj}
+const setupTD = (url) =>{
+    let obj = getTitleDescriptionObj();
+    obj.setUrl('/the.url.give.josn.post');
+}
+
+
+export {getTitleDescriptionObj, setupTD}
 
 
 // checking
 
 function basic(){
-    let obj = prepareTitleDescriptionObj();
+    let obj = getTitleDescriptionObj();
 
     let data = {
         'title': 'this is title',
@@ -132,6 +138,7 @@ function basic(){
     obj.setUrl('/the.url.give.josn.post');
     console.log(obj.getUrl())
 }
+
 
 if(require.main === module){
     basic();

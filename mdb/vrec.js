@@ -32,14 +32,6 @@ function findTops(number=20, callback){
     vcobj.getCollection(function(err, vcoll){
         if(err) return callback(err);
 
-        //vcoll.find(filter, {limit:number}, callback);
-
-        //vcoll.find(filter, {limit:number}, function(err, results){
-        //    if(err) return callback(err);
-
-        //    results.toArray(callback);
-        //});
-
         vcoll.find(filter, {limit:number}).toArray(callback);
     });
 }
@@ -85,19 +77,30 @@ function findSubsOpt(pid, opt, callback){
     });
 }
 
-function findOneSub(parentId, callback){
+function findOneSub(parentid, callback){
     vcobj.getCollection(function(err, vcoll){
         if(err) return callback(err);
 
-        vcoll.findOne({'parentid':parentId}, callback);
+        vcoll.findOne({'parentid':parentid}, callback);
     });
 }
 
 
-function insertTop(data, callback){
+function insertOneTd(data, callback){
     vcobj.getCollection(function(err, vcoll){
         if(err) return callback(err);
 
+        // value is not going to depend on text, 2017 0801
+        //if(typeof data['value'] !== 'number'){
+        //    //data['value'] = data['title'].length + data['description'].length
+        //    data['value'] = (data['title'] + data['description']).toString().length;
+        //}
+
+        // successfull callback get: obj {
+        //   result, ops, insertedCount, insertedId, connection, message
+        // }
+        // insertedId is ObjectId of mongodb,
+        // ops is array of inserted docs
         vcoll.insertOne(data, callback);
     });
 }
@@ -108,7 +111,31 @@ function insertSub(data, callback){
     vcobj.getCollection(function(err, vcoll){
         if(err) return callback(err);
 
-        vcoll.insertOne({'parentid':parentId}, callback);
+        // changed 0728 1821pm
+        vcoll.insertOneTd(data, callback);
+    });
+}
+
+
+// actually upsert? update or insert
+function upsertTD(data, callback){
+
+    // should we check and do the insert? it's overcautious?
+    if(!data._id && !data['id']){
+        if(!data.parentid){
+            return insertOneTd(data, callback);
+        }else{
+            return insertSub(data, callback);
+        }
+    }
+
+    vcobj.getCollection(function(err, vcoll){
+        if(err) return callback(err);
+
+        let oid = data._id || ObjectID(data['id']);
+
+        // callback get: err, updated data?, mongodb status?
+        return vcoll.update({'_id':oid}, data, callback);
     });
 }
 
@@ -134,7 +161,10 @@ module.exports.findOneByIDStr = findOneByIDStr;
 module.exports.findSubs = findSubs;
 module.exports.findSubsOpt = findSubsOpt;
 
-module.exports.insertTop = insertTop;
+module.exports.insertOneTd = insertOneTd;
+
+module.exports.upsertTD = upsertTD;
+
 
 
 

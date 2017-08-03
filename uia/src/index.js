@@ -24,16 +24,16 @@ ReactDOM.render(
 
 //?  //checking
 
-var data = {
-    'title': '0714 0832am try Promise.reject ' + Date().toString(),
-    'description': `0714 this test catch the reject
-        it should be babeled.
-        ` + Date().toString(),
-    'test':true,
-    'milli': Date.now().toString(),
-};
-window.mmoo = prepareTitleDescriptionObj();
-window.mmoo.setData(data);
-window.mmoo.setUrl('/insertone');
+//var data = {
+//    'title': '0714 0832am try Promise.reject ' + Date().toString(),
+//    'description': `0714 this test catch the reject
+//        it should be babeled.
+//        ` + Date().toString(),
+//    'test':true,
+//    'milli': Date.now().toString(),
+//};
+//window.mmoo = prepareTitleDescriptionObj();
+//window.mmoo.setData(data);
+//window.mmoo.setUrl('/insertone');
 
 registerServiceWorker();

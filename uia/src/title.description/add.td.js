@@ -127,4 +127,3 @@ class AddTitleDescription extends Component {
 //export {AddTitleDescription,};
 AddTitleDescription = translate()(AddTitleDescription);
 export {AddTitleDescription,};
-

@@ -30,10 +30,10 @@ app.set('view engine', 'pug');
 //  res.send('Hello World!')
 //})
 
-app.get('/hello', function (req, res) {
-  //res.send('Hello World!')
-  res.end('Hello World, port 4038!')
-});
+//app.get('/hello', function (req, res) {
+//  //res.send('Hello World!')
+//  res.end('Hello World, port 4038!')
+//});
 
 //
 //const mdb = require("./src/tmp/mdb.js");
@@ -55,6 +55,8 @@ app.get('/hello', function (req, res) {
 
 
 const vrec = require("./mdb/vrec.js");
+
+//d
 app.get('/gettop', function (req, res) {
     //res.end('Hello World!')
     vrec.findOneTop(function(err, rec){
@@ -185,19 +187,49 @@ app.get('/testinsertone', function(req,res){
     });
 });
 
+
 app.post('/insertone', function (req, res) {
     console.log('req.body :');
     console.log(req.body);
-    vrec.insertTop(req.body, function(err, insert){
+    vrec.insertOneTd(req.body, function(err, insert){
         if(err) return res.json({err: err});
 
         console.log(insert.insertedId);
-        res.json({ok: true});
+        if(!insert.insertedId){
+            return res.json({ok: false});
+        }
+
+        doc = insert.ops[0];
+        // insert.insertedId is same as ..ops[0].['_id']
+        doc['id'] = insert.insertedId.toString();
+
+        res.json(doc);
+    });
+    //res.json({ok: true, test:Date.now().toString()});
+});
+
+
+app.post('/up.sert.td', function (req, res) {
+    console.log('/up.sert.td req.body :');
+    console.log(req.body);
+    vrec.upsertTD(req.body, function(err, insert){
+        if(err) return res.json({err: err});
+
+        console.log(insert.insertedId);
+        if(!insert.insertedId){
+            return res.json({ok: false});
+        }
+
+        doc = insert.ops[0];
+        doc['id'] = insert.insertedId.toString();
+
+        res.json(doc);
     });
 
         //res.json({ok: true, test:Date.now().toString()});
     
 });
+
 
 app.listen(4038, function () {
   console.log('Example app listening on port 4038!')
