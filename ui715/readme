@@ -1,0 +1,39 @@
+
+alias mywebpack='/my/test/mdb.form/ui715/node_modules/.bin/webpack'
+
+
+# value calculation
+
+    it calculate for each value record. 
+    one thumb up adding up one, one thumb down deleting one value.
+
+    so there are data structure to log these value changes:
+    
+      value record : {
+        value: {
+          up: { 
+            user name : { info },
+            user name : { info }, ... 
+          },
+
+          down: { 
+            user name : { info },
+            user name : { info }, ... 
+          },
+
+
+        }
+      }
+
+
+    We need operations: 
+
+    initialize value data structure for a record,
+    thumb up/add one positive
+    thumb down/add one negative
+
+    count the result:
+      positive number - negative number OR up - down
+
+
+

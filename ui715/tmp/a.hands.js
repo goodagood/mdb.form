@@ -112,6 +112,17 @@ class HandPair extends Component {
         return (
                 <div style={styles.hands}>
                 {/*
+                  <div style={styles.thumbsup}>
+                    <i className="fa fa-thumbs-o-up fa-2x"></i>
+                    <span className="up-number"> 33 </span>
+                  </div>
+                  <div style={styles.thumbsdown}>
+                    <i className="fa fa-thumbs-o-down fa-2x"></i>
+                    <span className="down-number"> 22 </span>
+                  </div>
+
+                  <Thumb style={styles.thumbsup} />
+                  <Thumb  />
                   */}
 
                   <Thumb up  />
@@ -128,7 +139,20 @@ const styles = {
         padding: "3px 5px 3px 5px",
         border: "1px green solid",
         textAlign: "center",
-        //overflow: "hidden"
+        overflow: "hidden"
+    },
+    thumbsup: {
+        margin: "3px 5px 3px",
+        paddingLeft: "1em",
+        paddingRight: "0.5em",
+        float: "left",
+        color: "green"
+    },
+    thumbsdown: {
+        margin: "3px 5px 3px",
+        paddingLeft: "0.5em",
+        paddingRight: "1em",
+        //float: "left",
     },
 }
 

@@ -7,7 +7,6 @@
 var ObjectID = require('mongodb').ObjectID;
 
 var db = require('./adb.js');
-
 var vcobj = db.VCObj;
 
 var p = console.log;
@@ -37,15 +36,87 @@ function findTops(number=20, callback){
 }
 
 
-function findOneByIDStr(id, callback){
-
-    var oid = ObjectID(id);
+function limitFind(filter, skip=0, number=20, callback){
+    filter = filter || {parentid:{'$exists':false}};
 
     vcobj.getCollection(function(err, vcoll){
         if(err) return callback(err);
 
-        vcoll.findOne({_id: oid}, callback);
+        vcoll.find(filter, {skip:skip, limit:number}).toArray(callback);
     });
+}
+
+
+// moved from c.init.js
+
+/*
+ * Promised to find.
+ */
+function find(filter, skip, number, callback){
+
+    // default to find top
+    filter = filter || {parentid:{'$exists':false}};
+    skip   = skip   || 0;
+    number = number || 100;
+
+    return vcobj.getCollection().then((coll)=>{
+        if(typeof callback === 'function'){
+            return coll.find(filter, {skip:skip, limit:number}, callback);
+        }
+
+        p ('return the promise of mongodb find');
+        return coll.find(filter, {skip:skip, limit:number});
+    });
+}
+
+
+/*
+ * Promised to find an array.
+ */
+function findArray(filter, skip, number, callback){
+
+    // default to find top
+    filter = filter || {parentid:{'$exists':false}};
+    skip   = skip   || 0;
+    number = number || 100;
+
+    return find(filter, skip, number).then((res)=>{
+        return res.toArray();
+    });
+}
+
+
+function findOneById(id, callback){
+
+    var oid = id;
+
+    if(typeof id === 'string') oid = ObjectID(id);
+
+    if(typeof callback === 'function'){
+        return vcobj.getCollection(function(err, coll){
+            if(err) return callback(err);
+
+            coll.findOne({_id: oid}, callback);
+        });
+    }else{
+        return vcobj.getCollection().then(function(coll){
+                return coll.findOne({_id: oid});
+            });
+    }
+}
+
+// need checking after redo, 2017 0805
+function findOneByIDStr(id, callback){
+
+    var oid = ObjectID(id);
+
+    return findOneById(oid, callback);
+
+    //vcobj.getCollection(function(err, vcoll){
+    //    if(err) return callback(err);
+
+    //    vcoll.findOne({_id: oid}, callback);
+    //});
 }
 
 function findSubs(pid, callback){
@@ -149,6 +220,8 @@ function singleSub(filter = {parentid:{'$exists':true}}, callback){
         vcoll.findOne(filter, callback);
     });
 }
+
+
 module.exports.singleSub = singleSub;
 
 
@@ -156,8 +229,11 @@ module.exports.singleSub = singleSub;
 
 module.exports.findOneTop = findOneTop;
 module.exports.findTops = findTops;
+module.exports.limitFind = limitFind;
+
 module.exports.findOneSub = findOneSub;
 module.exports.findOneByIDStr = findOneByIDStr;
+module.exports.findOneById = findOneById;
 module.exports.findSubs = findSubs;
 module.exports.findSubsOpt = findSubsOpt;
 
@@ -165,6 +241,9 @@ module.exports.insertOneTd = insertOneTd;
 
 module.exports.upsertTD = upsertTD;
 
+// 2017 0805 1928pm
+module.exports.find = find;
+module.exports.findArray = findArray;
 
 
 

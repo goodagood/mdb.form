@@ -9,6 +9,9 @@
 
 var MongoClient = require('mongodb').MongoClient;
 
+var Promise = require("bluebird");
+
+
 //var gensamp = require("./gensamp.js");
 
 var p = console.log;
@@ -20,34 +23,64 @@ var dburl = 'mongodb://localhost:27017/ggsys';
 
 
 function get_value_collection(){
-    var _db   = null;
-    var _coll = null;
+    //var _db   = null; //d
+    //var _coll = null;
 
     var o = {
         db: null,
         collection: null,
 
-        getCollection: getCollection,
+        'getCollection': getCollection,
         'close': close
     }
 
     function connect(callback){
-        MongoClient.connect(dburl, function(err, db) {
-            if(err) return callback(err);
+        if(typeof callback === 'function'){
+            MongoClient.connect(dburl, function(err, db) {
+                if(err) return callback(err);
 
-            o.db         = db;
-            o.collection = db.collection('value');
-            return callback(null, o.collection);
-        });
+                o.db         = db;
+                o.collection = db.collection('value');
+                return callback(null, o.collection);
+            });
+        }
+
+        return MongoClient.connect(dburl);
     }
 
-    function getCollection(callback){
+    function _reuseCollection(callback){
         if(o.collection !== null){
             return callback(null, o.collection);
         }else{
             return connect(callback);
         }
     }
+
+    /*
+     * promised get collection OR callback if provided.
+     */
+    function fetchCollection(callback){
+        if(callback) return getCollection(callback);
+
+        return new Promise((resolve, reject)=>{
+            getCollection(function(err, coll){
+                if(err) return reject(err);
+
+                resolve(coll);
+            });
+        });
+    }
+    //o.fetchCollection = fetchCollection; //d
+
+
+    function getCollection(callback){
+        if(typeof callback === 'function'){
+            return _reuseCollection(callback);
+        }
+
+        return fetchCollection();
+    }
+
 
     function close(callback){
         o.db.close(callback);
@@ -71,6 +104,7 @@ function get_value_collection(){
 const objValueColl = get_value_collection();
 module.exports.VCObj = objValueColl;
 
+//d hide it?
 module.exports.get_value_collection = get_value_collection;
 //module.exports.get_one_value_rec = get_one_value_rec;
 
