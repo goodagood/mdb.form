@@ -50,9 +50,6 @@ class Thumb extends Component {
                 paddingRight: "0.5em",
 
             },
-            grey : {
-                color: "grey"
-            },
         };
     }
 

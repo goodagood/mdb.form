@@ -20,21 +20,8 @@ function initValue(oid, value){
 
     return vc.fetchCollection().then((coll)=>{
         return coll.update({'_id': oid}, {'$set': field});
-        //return coll.update({'_id': oid}, {'$set': field}, {upsert:true});
-        //
-        //, (err,result)=>{
-        //    if(err) return p(err);
-        //    o.uu = result;
-        //});
     });
     
-    //.then((result)=>{
-    //    o.u = result;
-    //}).catch((e)=>{
-    //    p(e);
-    //    o.e = e;
-    //});
-
 }
 
 
