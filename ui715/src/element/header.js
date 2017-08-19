@@ -10,24 +10,30 @@ import {ExampleMenu} from './burger.js';
 class BasicHeader extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            collapsed: false,
+        };
+
+        this.control = props.control;
     }
 
+    /*
+                //<div style={styles.menu_wrap}>
+                //  <span style={styles.item}> some menu </span>
+                //  <span style={styles.item}> number #2 </span>
+                //    <i className="fa fa-thumbs-o-up"></i>
+                //    <i className="fa fa-thumbs-o-down"></i>
+                //</div>
+
+                //<ExampleMenu right pageWrapId={ "content" } outerContainerId={ "root" } />
+                */
     renderBasicHeader (){
         return (
             <div className="basicHeader" 
                 style={styles.basic}
             >
-
                 <div style={styles.logo}> sys.value.log  </div>
-                {/*
-                <div style={styles.icon}>
-                    <i className="fa fa-thumbs-o-up"></i>
-                    <i className="fa fa-thumbs-o-down"></i>
-                </div>
-                */}
-
-                <ExampleMenu right pageWrapId={ "content" } outerContainerId={ "root" } />
-
             </div>
         );
     }
@@ -49,6 +55,7 @@ const styles = {
     basic: {
         fontFamily: "Monospace, Helvetica, Arial, sans-serif",
         display: "block",
+        height: "1.5em",
         //backgroundColor: "white",
     },
     logo: {
@@ -56,15 +63,21 @@ const styles = {
         fontSize: "1.2em",
         float: "left",
     },
-    icon: {
+    menu_wrap: {
         fontFamily: "Monospace, Helvetica, Arial, sans-serif",
         fontSize: "1.2em",
         display: "inline-block",
-        float: "left",
+        float: "right",
         paddingLeft: "1em",
         paddingRight: "1em",
 
     },
+    item: {
+        fontFamily: "Verdana, Arial, sans-serif, Helvetica, Monospace",
+        fontSize: "1.1em",
+        fontWeight: "bold",
+        padding: "0.2em 0.5em 0.5em",
+    }
 }
 
 

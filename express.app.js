@@ -16,7 +16,8 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 
 app.use(express.static('pub'))
-app.use('/b', express.static('build'))
+app.use(express.static('node_modules'))
+//app.use('/b', express.static('build'))
 
 // 2017 0715, test another attempt of UI settings
 app.use('/ui715', express.static('ui715/pub'))
@@ -231,7 +232,13 @@ app.post('/up.sert.td', function (req, res) {
 });
 
 
-app.listen(4038, function () {
-  console.log('Example app listening on port 4038!')
+// sub routes for thumbs
+var thumb_route = require("./routes/thumb.js");
+
+app.use('/thumb', thumb_route);
+
+
+app.listen(3333, function () {
+  console.log('Example app listening on port 3333!')
 });
 

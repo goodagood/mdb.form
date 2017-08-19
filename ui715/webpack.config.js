@@ -10,6 +10,8 @@ var BUILD_DIR = path.resolve(__dirname, './pub');
 var APP_DIR = path.resolve(__dirname, './src');
 
 var config = {
+    devtool: "source-map",
+
     //entry: APP_DIR + '/index.jsx',
     entry: APP_DIR + '/index.js',
 

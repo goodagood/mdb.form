@@ -9,6 +9,7 @@ i18n
   //.use(XHR)
   //.use(LanguageDetector)
   .init({
+    debug: false,
     lng: 'cn',
     fallbackLng: 'en',
     debug: true,
@@ -26,7 +27,7 @@ i18n
       nsMode: 'default' // set it to fallback to let passed namespaces to translated hoc act as fallbacks
     }
   }, (err)=>{
-      console.log('i18n init err: ', err);
+      if(err) console.log('i18n init err: ', err);
   });
 
 

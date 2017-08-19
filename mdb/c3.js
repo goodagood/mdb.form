@@ -1,141 +1,80 @@
 
-var ObjectID = require('mongodb').ObjectID;
-
-//var vc = require('./adb.js').VCObj;
-
-var vrec = require('./vrec.js');
-var vc = require('./adb.js').VCObj;
-
-var tools = require('./ct.js');
-
-var thumbs = require('./thumbs.js');
-
+var Promise = require('bluebird');
 
 var p = console.log;
 
 
-//var oo = {}; // for checking
-//
-//// populate oo with records
-//tools.cFindArray(oo);
+
+function setLuckyLimit(lim){
+    if( typeof lim !== 'number') lim = 0.99;
+    if( lim < 0 || lim > 1 ) lim = 0.99;
+
+    return function lucky(){
+
+        var r = Math.random();
+        p(r);
+
+        if(r > lim){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
 
 
+function untilLucky(interval){
 
-/* 
- *
- */
-var fake = require('./fake.thumbs.js');
-function tryOneThumb(username, oid, isUp){
-    username = username || fake.fakeUsername();
-    p('username: ', username);
-    p('oid: ', oid);
+    let lucky = setLuckyLimit();
 
-    // true is up, false is down
-    isUp = isUp || true; 
-
-    var toSet = {'$set': {}};
-
-    toSet['$set'].value = {};
-    toSet['$set'].value.up = {};
-    toSet['$set'].value.down = {};
-
-    var dotIndex = '';
-    if(isUp){
-        toSet['$set']['value'].up[username]   = {t: Date.now()};
-        dotIndex = `value.up.${username}.milli`;
-    }else{
-        toSet['$set'].value.down[username] = {t: Date.now()};
-        dotIndex = `value.down.${username}.milli`;
+    function wait(){
+        if(lucky()){
+            // no need to wait any more.
+            return false;
+        }else{
+            return true;
+        }
     }
 
-    var set2 = {};
-    set2['$set'] = {};
-    set2['$set'][dotIndex] = Date.now();
-
-    p('toSet: ', toSet);
-    p('dot index: ', dotIndex);
-    p('set2: ', set2);
-
-    return vc.getCollection().then(function(coll){
-        //return coll.update({'_id': oid},
-        //        {'$set': 
-        //            { 
-        //                //dotIndex.toString():
-        //                `${dotIndex}`:
-        //                    Date.now()
-        //                //{milli:Date.now()}
-        //            }
-        //        }
-        //        );
-
-        return coll.update({_id: oid}, set2);
-
-        // this erase other usernames
-        //return coll.update({_id: oid}, toSet);
+    return Promise.resolve(function(){
+        return lucky();
+    }).then(function(isLucky){
+        if(isLucky){
+            return Promise.resolve(function(what){
+                p(what);
+                return p('here');
+            });
+        }else{
+            return Promise.delay(interval).then(function(){
+                return waitLucky();
+            });
+        }
     });
-        
-
 }
 
 
-function oneThumb(username, oid, isUp){
-    username = username || fake.fakeUsername();
-    p('username: ', username);
-    p('oid: ', oid);
-
-    // true is up, false is down
-    isUp = isUp || true; 
+function oldway(){
+    let interval = 500; //ms
+    let keep = true;
 
 
-    var dotIndex = '';
-    if(isUp){
-        dotIndex = `value.up.${username}.milli`;
-    }else{
-        dotIndex = `value.down.${username}.milli`;
+    let isLucky = setLuckyLimit();
+
+    function checkLucky(){
+        keep = isLucky();
+        p(keep, interval);
+        if(!keep) return p('!keep');
+
+        return setTimeout(checkLucky, interval);
     }
 
-    var set2 = {};
-    set2['$set'] = {};
-    set2['$set'][dotIndex] = Date.now();
 
-    p('dot index: ', dotIndex);
-    p('set2: ', set2);
+    function start(){
+        setTimeout(checkLucky, interval);
+    }
 
-    return vc.getCollection().then(function(coll){
-        return coll.update({_id: oid}, set2);
-    });
-        
+
+    return start();
 }
 
-function tt(oid, upOrDown){
-    oid = oid || oo.ids[3];
-    upOrDown = upOrDown || tools.randbool();
-
-    oneThumb('aa', oid, upOrDown).then(function(ret){
-        oo.ret = ret;
-        p(ret);
-    }).catch(function(err){
-        p(err);
-        p('err');
-    });
-}
-
-//tt();
-
-
-if(require.main === module){
-
-    //upCount(oo);
-
-    //cFindArray(oo);
-
-    //cFindArray(oo).then(()=>{
-    //    countAllTopTD(oo.ids);
-    //});
-
-
-    setTimeout(()=>{
-        p('time to exit');
-        process.exit();
-    }, 5000);
-}
+oldway();

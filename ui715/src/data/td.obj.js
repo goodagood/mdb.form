@@ -1,5 +1,6 @@
 
 import {postTitleDescription} from 'src/util/pipe.js';
+import {prepare_thumbs} from './thumbs.js';
 
 const p = console.log;
 
@@ -7,6 +8,8 @@ const p = console.log;
 function getTitleDescriptionObj(){
     let d = {}; //data
     let o = {}; //obj using the data
+
+    let p = console.log;
 
     // use src/util/pipe.js, we don't need url anymore
     let url = null; // the url accept json from fetch api
@@ -17,24 +20,41 @@ function getTitleDescriptionObj(){
         'delay': 5000, // 5 seconds
     }
 
-    o.getData = ()=>{ return d; };
+    //if(typeof d.thumbs === 'undefined') d.thumbs = {};
+    // should we think d.thumbs is ready now?
 
+    let tobj = prepare_thumbs();
+
+    o.getData = ()=>{ return d; };
     o.setData = (data)=>{
         d = data;
         d['milli'] = Date.now().toString();
+
+        if(d._id && !d.id) d.id = d._id.toString();
+
+        if(d.thumbs){
+            tobj.setThumbs(d.thumbs);
+            tobj.setId(d.id);
+        }
     };
 
+    o.getIdStr = ()=>{ return d._id.toString(); };
+
+
     o.print = ()=>{ console.log(d); };
+
+    // now, thumb is value.
+    function getThumbsObj(){ return tobj; }
 
     const setChangeMill = ()=>{ d['milliChange'] = Date.now(); };
     const setSaveMill = ()=>{ d['milliSave'] = Date.now(); };
 
 
+    o.getAttr = (key)=>{ return d[key]; };
+    o.setAttr = (key, value)=>{ d[key] = value; setChangeMill(); };
+
     o.setUrl = (u)=>{ url = u; };
     o.getUrl = ()=>{ return url; };
-
-    o.getKey = (key)=>{ return d[key]; };
-    o.setKey = (key, value)=>{ d[key] = value; setChangeMill(); };
 
     o.assign = (obj)=>{ Object.assign(d, obj); setChangeMill(); };
 
@@ -106,10 +126,28 @@ function getTitleDescriptionObj(){
         o.saveLater();
     };
 
+
+    // todo
+    // this need access server to finish action
+    // ONLY server know who's thumb up/down
+    // then, the data need a refresh
+    function thumbUp(){
+    }
+
+    function thumbDown(){
+    }
+
+    o.thumbUp = thumbUp;
+    o.thumbDown = thumbDown;
+    o.getThumbsObj = getThumbsObj;
+
+    //o.getIdStr = getIdStr;
+
     return o;
 }
 
 
+//d ?
 const setupTD = (url) =>{
     let obj = getTitleDescriptionObj();
     obj.setUrl('/the.url.give.josn.post');

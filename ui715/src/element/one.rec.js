@@ -55,6 +55,23 @@ class OneRec extends Component {
 
     }
 
+    //onePair (){
+    //    return (
+    //        <div className="onePair" id="onePair"
+    //        >
+
+    //        {/* one pair place holder in the one.rec.js 
+
+    //        */}
+
+
+    //           <BasicText 
+    //           />
+
+    //        </div>
+
+    //    );
+    //}
 
     testTitleDescription(){
         p('test title description ', this.data.top);

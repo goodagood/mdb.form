@@ -16,10 +16,15 @@ function randint(start, stop){
     return parseInt(x);
 }
 
-function fakeUsername(){
-    let rint = randint(1e6, 1e7 -1 );
+function fakeUsername(n=3){
 
-    return `test-${rint}`;
+    let start = Math.pow(10, n-1)
+    let stop  = Math.pow(10, n) -1
+    let rint = randint(start, stop);
+
+    let userName = `test-${rint}`;
+    console.log('fake user name: ', userName);
+    return userName;
 }
 
 
@@ -44,6 +49,9 @@ function fakeThumbs(){
     return v;
 }
 
+function fakeOne(oidStr, isUp, username){
+    //todo
+}
 
 
 module.exports.fakeThumbs = fakeThumbs;

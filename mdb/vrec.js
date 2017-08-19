@@ -105,8 +105,9 @@ function findOneById(id, callback){
     }
 }
 
+
 // need checking after redo, 2017 0805
-function findOneByIDStr(id, callback){
+function findOneByIdStr(id, callback){
 
     var oid = ObjectID(id);
 
@@ -211,6 +212,20 @@ function upsertTD(data, callback){
 }
 
 
+// //?
+// function update(idStr, data, callback){
+//     vcobj.getCollection(function(err, vcoll){
+//         if(err) return callback(err);
+// 
+//         let oid = ObjectID(idStr);
+// 
+//         // callback get: err, updated data?, mongodb status?
+//         return vcoll.update({'_id':oid}, data, callback);
+//     });
+// }
+
+
+
 // checkings
 
 function singleSub(filter = {parentid:{'$exists':true}}, callback){
@@ -232,7 +247,7 @@ module.exports.findTops = findTops;
 module.exports.limitFind = limitFind;
 
 module.exports.findOneSub = findOneSub;
-module.exports.findOneByIDStr = findOneByIDStr;
+module.exports.findOneByIdStr = findOneByIdStr;
 module.exports.findOneById = findOneById;
 module.exports.findSubs = findSubs;
 module.exports.findSubsOpt = findSubsOpt;

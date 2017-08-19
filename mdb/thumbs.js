@@ -1,5 +1,12 @@
 
+var ObjectID = require('mongodb').ObjectID;
+
+var adb = require('./adb.js');
+const vo = adb.VCObj;
+
 var vrec = require('./vrec.js');
+
+var p = console.log;
 
 
 /*
@@ -30,47 +37,60 @@ function downCount(thumbs){
  * obj is the nave-value obj (like python dictionary) of records.
  */
 function countThumbs(obj){
-    var ups = upCount(obj.value);
-    var downs = downCount(obj.value);
+    var ups = upCount(obj.thumbs);
+    var downs = downCount(obj.thumbs);
     return [ups, downs];
 }
 
 
 var fake = require('./fake.thumbs.js');
 
+
 /* 
  * 
  */
-function oneThumb(username, oid, isUp){
+function addOneThumb(username, oid, isUp){
     username = username || fake.fakeUsername();
     //p('username: ', username);
     //p('oid: ', oid);
 
-    // true is thumb up, false is down
-    isUp = isUp || true; 
-
     // mongodb dot notation for sub field
     var dotIndex = '';
     if(isUp){
-        dotIndex = `value.up.${username}.milli`;
+        dotIndex = `thumbs.up.${username}.milli`;
     }else{
-        dotIndex = `value.down.${username}.milli`;
+        dotIndex = `thumbs.down.${username}.milli`;
     }
 
     var set2 = {};
     set2['$set'] = {};
     set2['$set'][dotIndex] = Date.now();
 
-    //p('dot index: ', dotIndex);
-    //p('set2: ', set2);
+    //console.log('dot index: ', dotIndex);
+    //console.log('set2: ', set2);
 
-    return vc.getCollection().then(function(coll){
+    return vo.getCollection().then(function(coll){
         return coll.update({_id: oid}, set2);
     });
         
 }
 
 
+function fakeAddThumb(idStr, isUp){
+    var id = ObjectID(idStr);
+    var name = fake.fakeUsername();
+
+    return addOneThumb(name, id, isUp).then(function(dbRte){
+        var n = dbRte.result.n;
+        if(n !== 1) throw 'not 1 record modified in fake add thumb';
+
+        return vrec.findOneByIdStr(id);
+    }).then(function(one){
+        var thumbs = {};
+        Object.assign(thumbs, one.thumbs, {id: one._id.toString()});
+        return thumbs;
+    });
+}
 
 
 
@@ -79,4 +99,5 @@ module.exports.upCount   = upCount;
 module.exports.downCount = downCount;
 module.exports.countThumbs = countThumbs;
 
-module.exports.oneThumb = oneThumb;
+module.exports.addOneThumb = addOneThumb;
+module.exports.fakeAddThumb = fakeAddThumb;
