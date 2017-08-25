@@ -1,39 +1,59 @@
 'use strict';
 
 var gulp = require('gulp');
+var browserify = require('gulp-browserify');
+var babel = require('gulp-babel');
+
+var del = require('del');
+
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 
-gulp.task('hi', () => {
-    console.log('task: hi');
+/*
+ * first babel js files in dir es6/, including reactjs to dir src/es5ed
+ * then browserify everything in dir src/
+ */
+
+gulp.task('hi', ['clean', 'es6', 'scss'], () => {
+    //console.log('task: hi');
+    //return gulp.src('./src/**/*.js')
+    return gulp.src('./src/**/a.js')
+       .pipe(browserify({
+        // options
+        //sourceType: 'module',
+       }))
+       .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('es6', () => {
+    // babel transform all js in es6 to es5ed
+    return gulp.src('./es6/**/*.js')
+       .pipe(babel({
+        // options
+        presets: ['env', 'react']
+       }))
+       .pipe(gulp.dest('./src/es5ed'));
 });
 
 
-
-gulp.task('sass', function () {
-    return gulp.src('./sass/**/*.scss')
+gulp.task('scss', function () {
+    return gulp.src('./src/scss/**/*.scss')
     .pipe(sass().on('error', sass.logError))    
     //.pipe(sourcemaps.write())
-    .pipe(gulp.dest('./css'));
+    .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('clean', function () {
+    return del([
+        './dist/**/*',
+        './src/es5ed/**/*',
+        //'./src/rct/**/*.js',
+
+   ]);
 });
     
 gulp.task('sass:watch', function () {
-    gulp.watch('./sass/**/*.scss', ['sass']);
+    gulp.watch('./scss/**/*.scss', ['sass']);
 });
 
 
-//import gulp from 'gulp';
-//import babelify from ‘babelify’;
-//import browserify from 'browserify';
-//import source from 'vinyl-source-stream';
-//import buffer from 'vinyl-buffer';
-//
-//gulp.task('scripts', () => {
-//  //browserify(['myEntryPoint.js', 'myModule.js'])
-//  browserify(['myEntryPoint.js', 'myModule.js'])
-//  .transform(babelify)
-//  .bundle()
-//  .pipe(source('bundle.js')
-//  .pipe(gulp.dest('dist/scripts'))
-//  .pipe(buffer())     // You need this if you want to continue using the stream with other plugins
-//});

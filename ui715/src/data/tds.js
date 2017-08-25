@@ -61,6 +61,22 @@ function mk_obj_for_title_description_data_set(){
         return d.aa[ind];
     }
 
+    function getTdById(idStr){
+        if(!d.fetched) return null;
+
+        var i;
+        for (i=0; i<d.aa.length; i++){
+            let one = d.aa[i];
+            let oneId = one.getIdStr();
+
+            if(oneId === idStr){
+                //console.log('find the title description obj, ', idStr, oneId);
+                return one;
+            }
+        }
+        return null;
+    }
+
 
     function isFetched(){
         return d.fetched;
@@ -85,6 +101,7 @@ function mk_obj_for_title_description_data_set(){
     o.randomTopTD = randomTopTD;
     o.waitFetched = waitFetched;
     o.waitRandomTopTD = waitRandomTopTD;
+    o.getTdById = getTdById;
 
     o.fetch();
     return o;

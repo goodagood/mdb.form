@@ -17,6 +17,10 @@ import BasicFooter from './element/footer.js';
 
 import {renderTD} from './element/front.td.js';
 import {frontList} from './element/front.list.js';
+import {composeFrontPage} from './element/front.a.js';
+import {tdEdit} from './element/front.edit.js';
+
+import {topids} from './element/in.dev.js';
 
 //import 'bulma/css/bulma.css';
 //import 'bulma/bulma.sass';
@@ -29,14 +33,15 @@ import './index.scss'; //?
 // set up data object, title description set
 import {tds} from 'src/data/tds.js';
 
-// // for checking
-// setTimeout(()=>{
-//     window.tds = tds;
-//     tds.waitFetched().then(function(){
-////         window.td = tds.randomTopTD();
-//         //console.log('window td: ', window.td.getData());
-//     });
-// }, 2000)
+// for checking
+setTimeout(()=>{
+    window.tds = tds;
+    window.topids = topids;
+    tds.waitFetched().then(function(){
+        window.td = tds.randomTopTD();
+        //console.log('window td: ', window.td.getData());
+    });
+}, 2000)
 
 
 
@@ -57,16 +62,20 @@ class RootDiv extends Component {
             if(obj === null) throw('fetch return null');
 
             this.randomTD = tds.randomTopTD();
-            //console.log(this.randomTD);
 
-            this.setState({fetched: true});
+            //this.setState({fetched: true});
+
 
             // during dev
+            // 1
             let opt = {
+                tdObj: this.randomTD,
                 id: this.randomTD.getIdStr(),
             };
             //this.setState({fetched: true, currentMenuItem: 'edit', currentMenuOpt: opt});
-            //this.setState({fetched: true, currentMenuItem: 'list'});
+
+            // 2
+            this.setState({fetched: true, currentMenuItem: 'list'});
         });
 
         this.renderList = this.renderList.bind(this);
@@ -75,6 +84,7 @@ class RootDiv extends Component {
     menuCallback = (name, opt)=>{
         // callback to set current menu item
 
+        //console.log('menu callback: ', name, opt);
         if(typeof name !== 'string') return;
 
         if( name === 'edit' ){
@@ -117,22 +127,59 @@ class RootDiv extends Component {
          };
         
         let tdArray = this.dataObj.giveData().aa;
-        console.log(tdArray.length);
+        //console.log(tdArray.length);
 
         return frontList(tdArray, items, this.menuCallback);
     }
 
 
     renderEditor (){
-        var items = {
-             add: "Add",
-             help: "Help",
-         };
-        
-        let tdArray = this.dataObj.giveData().aa;
-        console.log(tdArray.length);
+        let idStr = this.state.currentMenuOpt.id;
+        if(!idStr) {
+            throw 'render enditor SHOULD not continue';
+        }
 
-        return frontList(tdArray, items, this.menuCallback);
+        var items = {
+             list: "List",
+             add: "Add",
+         };
+
+        //console.log('edit render ', items);
+        
+        let tdObj = this.dataObj.getTdById(idStr);
+        //console.log('tdobj keys in render editor ', Object.keys(tdObj));
+
+        let opt = {
+            menuItems: items,
+            menuCallback: this.menuCallback,
+
+            tdObj: tdObj,
+            id: idStr,
+        };
+
+        return composeFrontPage('edit', opt);
+    }
+
+    // check what's wrong with renderEditor
+    doTDEdit (){
+        let idStr = this.state.currentMenuOpt.id;
+        if(!idStr) {
+            throw 'render enditor SHOULD not continue';
+        }
+
+        var items = {
+             some: "Some",
+             list: "List",
+             add: "Add",
+         };
+
+        //console.log('edit render ', items);
+        
+        let tdObj = this.dataObj.getTdById(idStr);
+        window.td = tdObj;
+        //console.log('tdobj keys in render editor ', Object.keys(tdObj));
+
+        return tdEdit(tdObj, items, this.menuCallback);
     }
 
 
@@ -188,8 +235,9 @@ class RootDiv extends Component {
                 //return this.render_old()
                 break;
             case 'edit':
-                return <h1> edit a title description</h1>
+                //return <h1> edit a title description</h1>
                 //return this.renderEditor()
+                return this.doTDEdit()
                 break;
             case 'list':
                 //return <h1> switch to list </h1>

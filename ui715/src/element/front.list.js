@@ -14,33 +14,19 @@ import BasicFooter from './footer.js';
  */
 function frontList (tdList, menuItems, menuCallback){
 
-    console.log(typeof tdList, Object.keys(tdList));
+    //console.log(typeof tdList, Object.keys(tdList));
     //console.log(typeof tdList, menuItems, typeof menuCallback);
-
-    // tdList is the list of title description object
-    //
-    // menu items = {
-    //     "menu-name-without-space": "menu text to show on",
-    //     firstMenu: "First Menu",
-    //     secondMenu: "2nd menu content",
-    //     thirdMenu: "BIG three",
-    // };
-    //
-    // clickCallback will get "menu name" as parameter.
-
-
-                        //onClick={()=>{this.passBackId(id);}}
-
 
     function mkList (){
         return tdList.map((tdo)=>{
             //console.log(tdo.id);
             let id = tdo.getIdStr();
+            let opt= {"id": id};
 
             return(
                 <li
                         key={id} 
-                        onClick={()=>{console.log(id);}}
+                        onClick={()=>{menuCallback('edit', opt);}}
                 >
                     {tdo.getTitle()}
                         

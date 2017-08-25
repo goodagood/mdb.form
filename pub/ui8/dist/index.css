@@ -1,0 +1,15 @@
+html {
+  text-align: center; }
+  html body {
+    max-width: 1024px;
+    margin: auto;
+    text-align: left;
+    background-color: silver; }
+  html header, html nav, html main, html footer {
+    clear: both; }
+  html footer {
+    text-align: center; }
+  html main {
+    min-height: 300px; }
+  html input, html textarea {
+    max-width: 78em; }

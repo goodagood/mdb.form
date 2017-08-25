@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 
 import Radium from 'radium';
 
+var p = console.log;
+
 
 class Item extends Component {
     /*
@@ -54,26 +56,21 @@ class Menu extends Component {
         super(props);
 
         // key starts with _/underline is not menu item.
-        this.state = {
+        this.state = Object.assign(
+        {
             _collapsed: false,
-        };
-
-        for (var k in props.menuItems){
-            this.state[k] = props.menuItems[k];
-        }
+        },
+        props.menuItems);
 
         this.clickCallback = props.menuCallback;
 
-        this.replaceItems = props.replaceItems;
+        console.log('menu constructor ', this.state);
     }
 
 
-    // used in dev
-    show(what){
-        console.log("in dev: ", what);
-    }
 
-    listMenuItems = ()=>{
+    listMenuItems  (){
+        //p('to list menu: ', this.state);
         var list = [];
         for (var k in this.state){
             if(typeof k === 'string'){
@@ -90,9 +87,6 @@ class Menu extends Component {
         return list;
     }
 
-                  // <Item name="item1" content="outIt" clickCallback={this.show} />
-                  // <Item name="item2" content="content" clickCallback={this.show} />
-                  // <Item name="item3" content="content" clickCallback={this.show} />
     renderBasicHeader (){
         return (
             <div className="menu" 

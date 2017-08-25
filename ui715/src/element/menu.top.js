@@ -5,6 +5,7 @@ import {Menu} from './menu.js';
 
 
 function buildMenu(items, clickCallback){
+    console.log('build menu: ', items);
 
     // items = {
     //     "menu-name-without-space": "menu text to show on",

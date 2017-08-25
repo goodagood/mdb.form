@@ -234,8 +234,10 @@ app.post('/up.sert.td', function (req, res) {
 
 // sub routes for thumbs
 var thumb_route = require("./routes/thumb.js");
-
 app.use('/thumb', thumb_route);
+
+var db2 = require("./routes/db2.js");
+app.use('/db2', db2);
 
 
 app.listen(3333, function () {
